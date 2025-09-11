@@ -75,17 +75,7 @@ export interface Team {
 }
 
 export const api = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    prepareHeaders: async (headers) => {
-      const session = await fetchAuthSession();
-      const { accessToken } = session.tokens ?? {};
-      if (accessToken) {
-        headers.set("Authorization", `Bearer ${accessToken}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL }),
   reducerPath: "api",
   tagTypes: ["Projects", "Tasks", "Users", "Teams"],
   endpoints: (build) => ({
@@ -98,10 +88,10 @@ export const api = createApi({
           const { userSub } = session;
           const { accessToken } = session.tokens ?? {};
 
-          const userDetailsResponse = await fetchWithBQ(`users/${userSub}`);
-          const userDetails = userDetailsResponse.data as User;
+          const UserDetailsResponse = await fetchWithBQ(` users/${userSub}`);
+          const userDetails = UserDetailsResponse.data as User;
 
-          return { data: { user, userSub, userDetails } };
+          return { data: { user, userSub, userDetails} };
         } catch (error: any) {
           return { error: error.message || "Could not fetch user data" };
         }
@@ -175,5 +165,4 @@ export const {
   useGetUsersQuery,
   useGetTeamsQuery,
   useGetTasksByUserQuery,
-  useGetAuthUserQuery,
 } = api;
